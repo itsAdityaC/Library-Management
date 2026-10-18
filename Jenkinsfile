@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = 'library-app'
         CONTAINER_NAME = 'library-container'
-        PATH = "C:\\Users\\Lenovo\\AppData\\Local\\Python\\bin;C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
+        PATH = "C:\\Users\\Lenovo\\AppData\\Local\\Python\\bin;C:\\Users\\Lenovo\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin;${env.PATH}"
     }
 
     stages {
