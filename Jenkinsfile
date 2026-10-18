@@ -1,3 +1,7 @@
+@'
+pipeline {
+    agent any
+
     environment {
         IMAGE_NAME = 'library-app'
         CONTAINER_NAME = 'library-container'
@@ -13,6 +17,8 @@
 
         stage('Build') {
             steps {
+                bat 'whoami'
+                bat 'where python'
                 bat 'python -m venv venv'
                 bat 'venv\\Scripts\\python -m pip install -r requirements.txt'
             }
@@ -43,3 +49,4 @@
         failure { echo 'Pipeline failed. Check the console output.' }
     }
 }
+'@ | Set-Content -Encoding ascii Jenkinsfile
