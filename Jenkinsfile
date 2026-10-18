@@ -1,9 +1,7 @@
-pipeline {
-    agent any
-
     environment {
         IMAGE_NAME = 'library-app'
         CONTAINER_NAME = 'library-container'
+        PATH = "C:\\Users\\Lenovo\\AppData\\Local\\Python\\bin;C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
     }
 
     stages {
