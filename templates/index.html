@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Library Management System</title>
+  <style>
+    :root {
+      --ink: #1b2540;
+      --paper: #f7f8fa;
+      --card: #ffffff;
+      --line: #d9dee8;
+      --teal: #0f766e;
+      --teal-bg: #d9f2ee;
+      --amber: #8a5a00;
+      --amber-bg: #fdecc8;
+      --muted: #5b6478;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--paper); color: var(--ink);
+      font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+      line-height: 1.5;
+    }
+    header { background: var(--ink); color: #fff; padding: 28px 24px; }
+    header h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 2rem; font-weight: 700; }
+    header p { margin: 4px 0 0; color: #b9c2d9; }
+    main { max-width: 960px; margin: 0 auto; padding: 24px; }
+    .stats { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+    .stat { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 20px; min-width: 150px; }
+    .stat strong { display: block; font-family: Georgia, serif; font-size: 1.8rem; }
+    .stat span { color: var(--muted); font-size: .9rem; }
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 18px; margin-bottom: 24px; }
+    .panel h2 { margin: 0 0 12px; font-family: Georgia, serif; font-size: 1.2rem; }
+    form.inline { display: flex; gap: 10px; flex-wrap: wrap; }
+    input[type=text] { flex: 1; min-width: 160px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 6px; font-size: 1rem; }
+    input[type=text]:focus, button:focus-visible { outline: 3px solid #7cc4bb; outline-offset: 1px; }
+    button { padding: 9px 16px; border: 0; border-radius: 6px; background: var(--teal); color: #fff; font-size: .95rem; cursor: pointer; }
+    button.secondary { background: var(--ink); }
+    table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+    th { background: #eef1f6; font-weight: 600; }
+    tr:last-child td { border-bottom: 0; }
+    .chip { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .85rem; font-weight: 600; }
+    .chip.Available { background: var(--teal-bg); color: var(--teal); }
+    .chip.Issued { background: var(--amber-bg); color: var(--amber); }
+    .empty { text-align: center; color: var(--muted); padding: 24px; }
+    .table-wrap { overflow-x: auto; }
+    footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 24px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Library Management System</h1>
+    <p>Browse, add, issue and return books.</p>
+  </header>
+
+  <main>
+    <div class="stats">
+      <div class="stat"><strong>{{ stats.total }}</strong><span>Total books</span></div>
+      <div class="stat"><strong>{{ stats.available }}</strong><span>Available</span></div>
+      <div class="stat"><strong>{{ stats.issued }}</strong><span>Issued</span></div>
+    </div>
+
+    <section class="panel">
+      <h2>Search books</h2>
+      <form class="inline" method="get" action="/">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search by title or author">
+        <button type="submit">Search</button>
+        {% if query %}<a href="/"><button type="button" class="secondary">Clear</button></a>{% endif %}
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Add a book</h2>
+      <form class="inline" method="post" action="/add">
+        <input type="text" name="title" placeholder="Book title" required>
+        <input type="text" name="author" placeholder="Author" required>
+        <button type="submit">Add book</button>
+      </form>
+    </section>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Title</th><th>Author</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          {% for b in books %}
+          <tr>
+            <td>{{ b.id }}</td>
+            <td>{{ b.title }}</td>
+            <td>{{ b.author }}</td>
+            <td><span class="chip {{ b.status }}">{{ b.status }}</span></td>
+            <td>
+              {% if b.status == "Available" %}
+              <form method="post" action="/issue/{{ b.id }}"><button type="submit">Issue</button></form>
+              {% else %}
+              <form method="post" action="/return/{{ b.id }}"><button type="submit" class="secondary">Return</button></form>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="empty">No books found. Try a different search or add a new book.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer>Built with Flask, Git, Jenkins and Docker</footer>
+</body>
+</html>
